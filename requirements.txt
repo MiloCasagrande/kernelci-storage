@@ -1,2 +1,4 @@
 Flask
 boto3
+redis
+hiredis
