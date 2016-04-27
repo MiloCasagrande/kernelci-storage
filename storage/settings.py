@@ -14,11 +14,11 @@
 # Run in debug mode.
 DEBUG = True
 
+# Name of the website
+WEBSITE_NAME = "Storage"
+
 # Description that will be used in the meta tags.
 DESCRIPTION = "Storage"
-
-# Title for the index page.
-INDEX_TITLE = None
 
 # AWS access id and key.
 AWS_ACCESS_KEY_ID = None

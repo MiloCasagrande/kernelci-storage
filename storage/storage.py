@@ -63,6 +63,7 @@ s3_client = aws_session.client("s3")
 
 # List of available size for bytes formatting.
 SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+WEBSITE_NAME = config_get("WEBSITE_NAME")
 
 
 def size_format(size):
@@ -198,11 +199,14 @@ def index(path):
 
         if not rendered:
             if path == "/":
-                page_title = config_get("INDEX_TITLE") or "Storage Home Page"
+                page_title = "{:s} - {:s}".format(WEBSITE_NAME, "Home Page")
+                body_title = "Home Page"
                 parent = None
                 path = ""
             else:
-                page_title = "Index of {:s}".format(path)
+                page_title = "{:s} - {:s}".format(
+                    WEBSITE_NAME, "Index of {:s}".format(path))
+                body_title = "Index of &#171;{:s}&#187;".format(path)
                 parent = os.path.split(path[:-1])[0]
 
                 if not parent:
@@ -217,7 +221,7 @@ def index(path):
                 "listing.html",
                 entries=scan_bucket(path),
                 page_title=page_title,
-                body_title=page_title,
+                body_title=body_title,
                 parent=parent
             )
 
