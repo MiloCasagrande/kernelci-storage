@@ -11,10 +11,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Run in debug mode.
-DEBUG = True
-TESTING = DEBUG
-
 # Used for the Server response header.
 SERVER_HEADER = "Storage"
 
@@ -39,3 +35,7 @@ REDIS_DB = 0
 REDIS_PASSWORD = None
 REDIS_PREFIX = "kcistorage|"
 REDIS_TIMEOUT = 300
+
+# Run in debug mode.
+DEBUG = False
+TESTING = DEBUG
