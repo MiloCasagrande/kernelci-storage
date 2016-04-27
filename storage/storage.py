@@ -36,6 +36,10 @@ __versionfull__ = __version__
 app = Flask("kernelci-storage")
 app.config.from_object("settings")
 
+settings_var = os.environ.get("STORAGE_SETTINGS")
+if settings_var:
+    app.config.from_pyfile(settings_var, silent=True)
+
 config_get = app.config.get
 
 cache = None
