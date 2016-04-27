@@ -13,6 +13,10 @@
 
 # Run in debug mode.
 DEBUG = True
+TESTING = DEBUG
+
+# Used for the Server response header.
+SERVER_HEADER = "Storage"
 
 # Name of the website
 WEBSITE_NAME = "Storage"

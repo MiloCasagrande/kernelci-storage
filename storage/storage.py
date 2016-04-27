@@ -14,6 +14,7 @@
 from flask import (
     Flask,
     abort,
+    after_this_request,
     redirect,
     render_template
 )
@@ -68,6 +69,8 @@ s3_client = aws_session.client("s3")
 # List of available size for bytes formatting.
 SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 WEBSITE_NAME = config_get("WEBSITE_NAME")
+SERVER_HEADER = "{:s}/{:s}".format(
+    config_get("SERVER_HEADER"), __versionfull__)
 
 
 def size_format(size):
@@ -216,6 +219,14 @@ def favicon():
 @app.route("/<path:path>", methods=["GET"])
 def index(path):
     """The only needed route/view."""
+
+    @after_this_request
+    def add_header(response):
+        """Inject and/or change response headers."""
+        response.headers["X-Robots-Tag"] = \
+            "noindex,nofollow,nosnippet,noarchive"
+        response.headers["Server"] = SERVER_HEADER
+        return response
 
     # Dummy logic: if it ends with a slash, it's a dir.
     if any([path == "/", path[-1] == "/"]):
