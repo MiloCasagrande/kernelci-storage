@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="{{ description }}">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="robots" content="nosnippet">
+    <title>{%- block page_title %}{%- endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-3.3.6.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-theme-3.3.6.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/font-awesome-4.5.0.min.css">
+    <style type="text/css">
+        footer {
+            background-color: #f5f5f5;
+            bottom: 0;
+            height: 45px;
+            position: absolute;
+            width: 100%;
+        }
+        footer > div.container {
+            font-size: small;
+            font-weight: lighter;
+            padding-top: 0.4em;
+        }
+    </style>
+    {%- block style %}{%- endblock %}
+</head>
+<body>
+    <div class="container main-content">
+        {%- block content %}{%- endblock %}
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul class="list-unstyled">
+                        <li>
+                            Version:&nbsp;{{ version }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+{%- block scripts %}{%- endblock %}
+</body>
+</html>

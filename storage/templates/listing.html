@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block style %}
+<style type="text/css">
+    table > tbody {
+        font-size: 90%;
+    }
+    td.file-name {
+        min-width: 74%;
+        max-width: 74%;
+        width: 74%;
+    }
+    td.file-date {
+        max-width: 14%;
+        min-width: 14%;
+        width: 14%;
+    }
+    td.file-size {
+        max-width: 12%;
+        min-width: 12%;
+        width: 12%;
+    }
+    td > i {
+        padding-left: 0.65em;
+    }
+    thead td > i:hover {
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="page-header"><h4>{{ body_title }}</h4></div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <table class="table table-striped table-condensed table-hover">
+            <thead>
+                <tr>
+                    <td class="file-name">File Name<i class="fa fa-sort" aria-hidden="true"></i></td>
+                    <td class="file-size">File Size<i class="fa fa-sort" aria-hidden="true"></i></td>
+                    <td class="file-date">Date<i class="fa fa-sort" aria-hidden="true"></i></td>
+                </tr>
+            </thead>
+            {%- if parent -%}
+            <tr>
+                <td colspan="3" data-type="parent">
+                    <a href="{{ parent }}">Parent directory&nbsp;<i class="fa fa-arrow-up"></i></a>
+                </td>
+            </tr>
+            {%- endif -%}
+            {%- for k, v in entries %}
+            <tr>
+                {%- if v.type == "dir" %}
+                <td class="file-name" data-sortkey="{{ v.sort }}" data-type="{{ v.type }}">
+                    <a href="{{ v.path }}">{{- k -}}/</a>
+                {%- else %}
+                <td class="file-name" data-sortkey="{{ v.sort }}" data-type="{{ v.type }}">
+                    <a href="{{ v.path }}">{{- k -}}</a>
+                {%- endif -%}
+                </td>
+                {%- if v.size is none -%}
+                <td class="file-size" data-sortkey="-">&dash;</td>
+                {%- else -%}
+                <td class="file-size" data-sortkey="{{ v.bytes }}">{{- v.size -}}</td>
+                {%- endif -%}
+                {%- if v.time is none -%}
+                <td class="file-date" data-sortkey="-">&dash;</td>
+                {%- else -%}
+                <td class="file-date" data-sortkey="{{ v.time_sort }}">
+                    <time datetime="{{ v.time_iso }}">{{- v.time -}}</time>
+                </td>
+                {%- endif -%}
+            </tr>
+            {%- endfor -%}
+        </table>
+    </div>
+</div>
+{% endblock %}
