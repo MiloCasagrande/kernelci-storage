@@ -182,6 +182,26 @@ def inject_variables():
     )
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    """Render 404 errors."""
+    return render_template(
+        "404.html",
+        page_title="{:s} - {:s}".format(WEBSITE_NAME, "Resource Not Found"),
+        body_title="Resource not found"
+    ), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    """Render 500 errors."""
+    return render_template(
+        "500.html",
+        page_title="{:s} - {:s}".format(WEBSITE_NAME, "Internal Error"),
+        body_title="Internal error"
+    ), 500
+
+
 @app.route("/favicon.ico", methods=["GET"])
 def favicon():
     """Just a placeholder to catch the favicon.ico requests."""
