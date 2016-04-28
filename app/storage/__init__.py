@@ -35,7 +35,8 @@ __versionfull__ = __version__
 
 # pylint: disable=invalid-name
 app = Flask("kernelci-storage")
-app.config.from_object("settings")
+app.root_path = os.path.abspath(os.path.dirname(__file__))
+app.config.from_object("storage.settings")
 
 settings_var = os.environ.get("STORAGE_SETTINGS")
 if settings_var:
@@ -59,9 +60,11 @@ else:
 # The AWS session to connect to services.
 aws_session = None
 if all([config_get("AWS_ACCESS_KEY_ID"), config_get("AWS_SECRET_ACCESS_KEY")]):
-    aws_session = boto3.session.Session()
+    aws_session = boto3.session.Session(
+        aws_access_key_id=config_get("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=config_get("AWS_SECRET_ACCESS_KEY"))
 else:
-    app.logger.error("No AWS credentials specified")
+    print("No AWS credentials specified")
     sys.exit(1)
 
 s3_client = aws_session.client("s3")
@@ -71,6 +74,7 @@ SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 WEBSITE_NAME = config_get("WEBSITE_NAME")
 SERVER_HEADER = "{:s}/{:s}".format(
     config_get("SERVER_HEADER"), __versionfull__)
+BUCKET_NAME = config_get("AWS_S3_BUCKET")
 
 
 def size_format(size):
@@ -103,7 +107,7 @@ def scan_bucket(directory):
     :return Yield the found values, or 404 if nothing is found.
     """
     objects = s3_client.list_objects(
-        Bucket=config_get("AWS_S3_BUCKET"),
+        Bucket=BUCKET_NAME,
         Delimiter="/",
         Prefix=directory
     )
@@ -165,14 +169,13 @@ def generate_artifact_url(key):
     :return The actual URL of the object.
     :rtype str
     """
-    bucket = config_get("AWS_S3_BUCKET")
     try:
         # First check if the key exists.
-        s3_client.head_object(Bucket=bucket, Key=key)
+        s3_client.head_object(Bucket=BUCKET_NAME, Key=key)
         return s3_client.generate_presigned_url(
             ClientMethod="get_object",
             Params={
-                "Bucket": bucket,
+                "Bucket": BUCKET_NAME,
                 "Key": key
             }
         )
@@ -265,7 +268,3 @@ def index(path):
         return rendered
     else:
         return redirect(generate_artifact_url(path))
-
-
-if __name__ == "__main__":
-    app.run(debug=config_get("DEBUG"))

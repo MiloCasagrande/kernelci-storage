@@ -39,3 +39,4 @@ REDIS_TIMEOUT = 300
 # Run in debug mode.
 DEBUG = False
 TESTING = DEBUG
+THREADED = False
