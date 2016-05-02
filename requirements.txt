@@ -2,4 +2,4 @@ Flask
 boto3
 redis
 hiredis
-uswgi
+uwsgi
