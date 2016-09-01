@@ -20,21 +20,10 @@ WEBSITE_NAME = "Storage"
 # Description that will be used in the meta tags.
 DESCRIPTION = "Storage"
 
-# AWS access id and key.
-AWS_ACCESS_KEY_ID = None
-AWS_SECRET_ACCESS_KEY = None
+ROOT_DIR = "/mnt/artifacts"
 
-# S3 bucket name.
-AWS_S3_BUCKET = None
-
-# Redis cache.
-REDIS_CACHE = False
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-REDIS_DB = 0
-REDIS_PASSWORD = None
-REDIS_PREFIX = "kcistorage|"
-REDIS_TIMEOUT = 300
+# Let the web server handle the files.
+USE_X_SENDFILE = False
 
 # Run in debug mode.
 DEBUG = False
