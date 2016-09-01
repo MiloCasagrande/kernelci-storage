@@ -1,5 +1,3 @@
 Flask
-redis
-hiredis
 uwsgi
 scandir
