@@ -15,26 +15,24 @@ from flask import (
     Flask,
     abort,
     after_this_request,
-    redirect,
-    render_template
+    render_template,
+    send_from_directory
 )
 
-from werkzeug.contrib.cache import (
-    RedisCache,
-    SimpleCache
-)
-
-import boto3
-import botocore
+import datetime
 import math
 import os
-import sys
 
-__version__ = "2016.4"
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
+
+__version__ = "2016.9"
 __versionfull__ = __version__
 
 # pylint: disable=invalid-name
-app = Flask("kernelci-storage")
+app = Flask("simple-storage")
 app.root_path = os.path.abspath(os.path.dirname(__file__))
 app.config.from_object("storage.settings")
 
@@ -44,37 +42,12 @@ if settings_var:
 
 config_get = app.config.get
 
-cache = None
-if config_get("REDIS_CACHE"):
-    cache = RedisCache(
-        host=config_get("REDIS_HOST"),
-        port=config_get("REDIS_PORT"),
-        password=config_get("REDIS_PASSWORD"),
-        db=config_get("REDIS_DB"),
-        default_timeout=config_get("REDIS_TIMEOUT"),
-        key_prefix=config_get("REDIS_PREFIX")
-    )
-else:
-    cache = SimpleCache(threshold=50)
-
-# The AWS session to connect to services.
-aws_session = None
-if all([config_get("AWS_ACCESS_KEY_ID"), config_get("AWS_SECRET_ACCESS_KEY")]):
-    aws_session = boto3.session.Session(
-        aws_access_key_id=config_get("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=config_get("AWS_SECRET_ACCESS_KEY"))
-else:
-    print("No AWS credentials specified")
-    sys.exit(1)
-
-s3_client = aws_session.client("s3")
-
 # List of available size for bytes formatting.
 SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 WEBSITE_NAME = config_get("WEBSITE_NAME")
 SERVER_HEADER = "{:s}/{:s}".format(
     config_get("SERVER_HEADER"), __versionfull__)
-BUCKET_NAME = config_get("AWS_S3_BUCKET")
+ROOT = config_get("ROOT_DIR")
 
 
 def size_format(size):
@@ -99,88 +72,41 @@ def size_format(size):
     return size_fmt
 
 
-def scan_bucket(directory):
-    """Scan an S3 bucket looking for the provided "directory".
+def scan_dir(directory, root):
+    """Parse the directory.
 
-    :param directory: The path to look up in the bucket.
+    :param directory: The path to scan.
     :type directory: str
-    :return Yield the found values, or 404 if nothing is found.
+    :return Yield the found values.
     """
-    objects = s3_client.list_objects(
-        Bucket=BUCKET_NAME,
-        Delimiter="/",
-        Prefix=directory
-    )
-
-    # Get the directories, and then the files.
-    entries = objects.get("CommonPrefixes", [])
-    entries.extend(objects.get("Contents", []))
-
-    # If S3 hasn't anything in a "directory", it means it doesn't exists.
-    if not entries:
-        abort(404)
-
-    for entry in entries:
-        name = None
+    for entry in scandir(directory):
         values = {}
+        name = entry.name
+        path = os.path.join(root, entry.name)
 
-        if entry.get("Prefix", None):
-            path = entry["Prefix"]
-
-            if path[0] != "/":
-                path = "/{:s}".format(path)
-
-            name = os.path.basename(path[:-1])
+        if entry.is_dir():
             values["path"] = path
             values["size"] = None
             values["bytes"] = None
             values["time"] = None
             values["time_iso"] = None
             values["time_sort"] = -1
-            values["sort"] = "d{:s}".format(name.lower())
+            values["sort"] = "d{}".format(name.lower())
             values["type"] = "dir"
-        elif entry.get("Key", None):
-            path = entry["Key"]
+        else:
+            e_stat = entry.stat()
+            time = datetime.datetime.fromtimestamp(e_stat.st_mtime)
 
-            if path[0] != "/":
-                path = "/{:s}".format(path)
-
-            name = os.path.basename(path)
-            time = entry["LastModified"]
             values["path"] = path
-            values["size"] = size_format(entry["Size"])
-            values["bytes"] = entry["Size"]
+            values["size"] = size_format(e_stat.st_size)
+            values["bytes"] = e_stat.st_size
             values["time"] = "{} {}".format(time.date(), time.time())
             values["time_iso"] = time.isoformat()
             values["time_sort"] = time.timestamp()
-            values["sort"] = "f{:s}".format(name.lower())
+            values["sort"] = "f{}".format(name.lower())
             values["type"] = "file"
 
         yield name, values
-
-
-def generate_artifact_url(key):
-    """Generate the URL of an object in the bucket.
-
-    If the key is not found, return 404.
-
-    :param key: The key to check in the bucket.
-    :type key: str
-    :return The actual URL of the object.
-    :rtype str
-    """
-    try:
-        # First check if the key exists.
-        s3_client.head_object(Bucket=BUCKET_NAME, Key=key)
-        return s3_client.generate_presigned_url(
-            ClientMethod="get_object",
-            Params={
-                "Bucket": BUCKET_NAME,
-                "Key": key
-            }
-        )
-    except botocore.exceptions.ClientError:
-        abort(404)
 
 
 @app.context_processor
@@ -218,9 +144,27 @@ def favicon():
     abort(404)
 
 
-@app.route("/", defaults={"path": "/"}, methods=["GET"])
-@app.route("/<path:path>", methods=["GET"])
-def index(path):
+@app.route("/", methods=["GET"])
+def index():
+    """The empty index page."""
+
+    @after_this_request
+    def add_header(response):
+        """Inject and/or change response headers."""
+        response.headers["X-Robots-Tag"] = \
+            "noindex,nofollow,nosnippet,noarchive"
+        response.headers["Server"] = SERVER_HEADER
+        return response
+
+    page_title = "{:s} - {:s}".format(WEBSITE_NAME, "Home Page")
+
+    return render_template(
+        "index.html",
+        page_title=page_title, body_title=WEBSITE_NAME, website=WEBSITE_NAME)
+
+
+@app.route("/<path:path>/", methods=["GET"])
+def fs_path(path):
     """The only needed route/view."""
 
     @after_this_request
@@ -231,40 +175,30 @@ def index(path):
         response.headers["Server"] = SERVER_HEADER
         return response
 
-    # Dummy logic: if it ends with a slash, it's a dir.
-    if any([path == "/", path[-1] == "/"]):
-        rendered = cache.get(path)
+    t_path = os.path.join(ROOT, path)
 
-        if not rendered:
-            if path == "/":
-                page_title = "{:s} - {:s}".format(WEBSITE_NAME, "Home Page")
-                body_title = "Home Page"
-                parent = None
-                path = ""
-            else:
-                page_title = "{:s} - {:s}".format(
-                    WEBSITE_NAME, "Index of {:s}".format(path))
-                body_title = "Index of &#171;{:s}&#187;".format(path)
-                parent = os.path.split(path[:-1])[0]
+    if path[0] != "/":
+        path = "/{}".format(path)
+    if path[-1] == "/":
+        path = "{}/".format(path)
 
-                if not parent:
-                    parent = "/"
-                else:
-                    if parent[0] != "/":
-                        parent = "/{:s}".format(parent)
-                    if parent[-1] != "/":
-                        parent = "{:s}/".format(parent)
+    if os.path.isdir(t_path):
+        parent = os.path.dirname(path)
+        if parent == "/":
+            parent = None
 
-            rendered = render_template(
-                "listing.html",
-                entries=scan_bucket(path),
-                page_title=page_title,
-                body_title=body_title,
-                parent=parent
-            )
+        page_title = "{} - {}".format(WEBSITE_NAME, path)
+        body_title = WEBSITE_NAME
 
-            cache.set(path, rendered)
+        return render_template(
+            "listing.html",
+            entries=scan_dir(t_path, path),
+            parent=parent,
+            page_title=page_title,
+            body_title=body_title)
 
-        return rendered
+    elif os.path.isfile(t_path):
+        return send_from_directory(
+            os.path.dirname(t_path), os.path.basename(t_path))
     else:
-        return redirect(generate_artifact_url(path))
+        abort(404)
