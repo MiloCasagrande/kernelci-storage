@@ -44,7 +44,8 @@ config_get = app.config.get
 
 # List of available size for bytes formatting.
 SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-WEBSITE_NAME = config_get("WEBSITE_NAME")
+PAGE_TITLE = "{}&nbsp;&#946;".format(config_get("WEBSITE_NAME"))
+WEBSITE_NAME = "{}&nbsp;<sup>&#946;</sup>".format(config_get("WEBSITE_NAME"))
 SERVER_HEADER = "{:s}/{:s}".format(
     config_get("SERVER_HEADER"), __versionfull__)
 ROOT = config_get("ROOT_DIR")
@@ -123,7 +124,7 @@ def page_not_found(error):
     """Render 404 errors."""
     return render_template(
         "404.html",
-        page_title="{:s} - {:s}".format(WEBSITE_NAME, "Resource Not Found"),
+        page_title="{:s} - {:s}".format(PAGE_TITLE, "Resource Not Found"),
         body_title="Resource not found"
     ), 404
 
@@ -133,7 +134,7 @@ def internal_server_error(error):
     """Render 500 errors."""
     return render_template(
         "500.html",
-        page_title="{:s} - {:s}".format(WEBSITE_NAME, "Internal Error"),
+        page_title="{:s} - {:s}".format(PAGE_TITLE, "Internal Error"),
         body_title="Internal error"
     ), 500
 
@@ -156,7 +157,7 @@ def index():
         response.headers["Server"] = SERVER_HEADER
         return response
 
-    page_title = "{:s} - {:s}".format(WEBSITE_NAME, "Home Page")
+    page_title = "{:s} - {:s}".format(PAGE_TITLE, "Home Page")
 
     return render_template(
         "index.html",
@@ -187,7 +188,7 @@ def fs_path(path):
         if parent == "/":
             parent = None
 
-        page_title = "{} - {}".format(WEBSITE_NAME, path)
+        page_title = "{} - {}".format(PAGE_TITLE, path)
         body_title = WEBSITE_NAME
 
         return render_template(

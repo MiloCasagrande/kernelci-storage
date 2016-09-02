@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_title %}{{ page_title|safe }}{% endblock %}
 {% block content %}
 <div class="row">
     <div class="page-header"><h4>{{ body_title|safe }}</h4></div>
@@ -8,7 +8,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div>
             <p>
-                Welcome to {{ website }}&nbsp;<sup>&#946;</sup>.
+                Welcome to {{ website|safe }}.
                 <br/>
                 Please use your unique URL to access your content.
             </p>
