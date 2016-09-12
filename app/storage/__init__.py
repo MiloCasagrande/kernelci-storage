@@ -176,20 +176,21 @@ def fs_path(path):
         response.headers["Server"] = SERVER_HEADER
         return response
 
+    o_path = path
     t_path = os.path.join(ROOT, path)
 
     if path[0] != "/":
         path = "/{}".format(path)
-    if path[-1] == "/":
-        path = "{}/".format(path)
+    if o_path[-1] != "/":
+        o_path = "{}/".format(o_path)
 
     if os.path.isdir(t_path):
         parent = os.path.dirname(path)
         if parent == "/":
             parent = None
 
-        page_title = "{} - {}".format(PAGE_TITLE, path)
-        body_title = WEBSITE_NAME
+        body_title = "Index of &#171;{}&#187;".format(o_path)
+        page_title = "{} - {}".format(PAGE_TITLE, body_title)
 
         return render_template(
             "listing.html",
