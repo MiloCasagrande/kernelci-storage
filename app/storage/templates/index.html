@@ -11,8 +11,8 @@
 <nav>
     <ul class="nav nav-pills pull-right">
         <li role="presentation" class="active"><a href="/">Home</a></li>
+        <li role="presentation"><a href="/signup/">Sign Up</a></li>
         <li role="presentation"><a href="#">Info</a></li>
-        <li role="presentation"><a href="#">Contact</a></li>
     </ul>
 </nav>
 <h3 class="text-muted">{{ website_name|safe }}</h3>
@@ -34,7 +34,7 @@
         <h4>Obtain access</h4>
         <div>
             <ol>
-                <li>Obtain access and upload your SSH key.</li>
+                <li>Obtain access and upload your SSH key: <a href="/signup/">Sign Up</a>.</li>
                 <li>Get your username and repository URL.</li>
             </ol>
         </div>
@@ -62,7 +62,7 @@
         <div>
             <ul class="list-unstyled">
                 <li>
-                    <pre>$ git remote add gitci URL</pre>
+                    <pre>$ git remote add gitci git@gitci.com:username/zephyr-project</pre>
                 </li>
             </ul>
         </div>
@@ -73,7 +73,7 @@
                     <pre>$ git push gitci master</pre>
                 </li>
                 <li>
-                    Lives results will populate your screen&hellip;
+                    Lives results will appear on your screen.
                 </li>
             </ul>
         </div>
@@ -81,7 +81,7 @@
         <div>
             <ul class="list-unstyled">
                 <li>
-                    The system will store your results and provide you with a link.
+                    The system will store your results and provide you with a link to see them.
                 </li>
             </ul>
         </div>
