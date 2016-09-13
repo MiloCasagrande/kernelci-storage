@@ -45,7 +45,8 @@ config_get = app.config.get
 # List of available size for bytes formatting.
 SIZES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PAGE_TITLE = "{}&nbsp;&#946;".format(config_get("WEBSITE_NAME"))
-WEBSITE_NAME = "{}&nbsp;<sup>&#946;</sup>".format(config_get("WEBSITE_NAME"))
+WEBSITE_NAME = "{}&nbsp;<sup><small>&#946;eta</small></sup>".format(
+    config_get("WEBSITE_NAME"))
 SERVER_HEADER = "{:s}/{:s}".format(
     config_get("SERVER_HEADER"), __versionfull__)
 ROOT = config_get("ROOT_DIR")
@@ -114,6 +115,7 @@ def scan_dir(directory, root):
 def inject_variables():
     """Inject often-used variables."""
     return dict(
+        website_name=WEBSITE_NAME,
         description=config_get("DESCRIPTION"),
         version=__versionfull__
     )
