@@ -1,11 +1,26 @@
 {% extends "base.html" %}
 {% block page_title %}{{ page_title|safe }}{% endblock %}
+{% block style %}
+<style type="text/css">
+    .index {
+        padding-top: 20px;
+    }
+</style>
+{% endblock %}
+{% block header %}
+<nav>
+    <ul class="nav nav-pills pull-right">
+        <li role="presentation" class="active"><a href="/">Home</a></li>
+        <li role="presentation"><a href="#">Info</a></li>
+        <li role="presentation"><a href="#">Contact</a></li>
+    </ul>
+</nav>
+<h3 class="text-muted">{{ website_name|safe }}</h3>
+{% endblock %}
 {% block content %}
 <div class="jumbotron">
     <div>
-        <p>
-            Using git://ci is simple:
-        </p>
+        <p>Using git://ci is simple:</p>
         <ol>
             <li>Obtain access</li>
             <li>Clone zephyr source code</li>
@@ -14,7 +29,7 @@
         </ol>
     </div>
 </div>
-<div class="row">
+<div class="row index">
     <div class="col-lg-12">
         <h4>Obtain access</h4>
         <div>
