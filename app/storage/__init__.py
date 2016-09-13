@@ -19,6 +19,12 @@ from flask import (
     send_from_directory
 )
 
+from flask_wtf import Form
+from wtforms.fields import (
+    StringField,
+    TextAreaField
+)
+
 import datetime
 import math
 import os
@@ -40,6 +46,8 @@ settings_var = os.environ.get("STORAGE_SETTINGS")
 if settings_var:
     app.config.from_pyfile(settings_var, silent=True)
 
+app.config["SECRET_KEY"] = os.urandom(24)
+
 config_get = app.config.get
 
 # List of available size for bytes formatting.
@@ -50,6 +58,27 @@ WEBSITE_NAME = "{}&nbsp;<sup><small>&#946;eta</small></sup>".format(
 SERVER_HEADER = "{:s}/{:s}".format(
     config_get("SERVER_HEADER"), __versionfull__)
 ROOT = config_get("ROOT_DIR")
+
+
+class SignUpForm(Form):
+    username = StringField(
+        id="username",
+        label="Username",
+        description="The username to use with the system",
+        render_kw={
+            "aria-describedby": "usernameHelp",
+            "placeholder": "Choose a username"
+        }
+    )
+    ssh_key = TextAreaField(
+        id="sshkey",
+        label="SSH Key",
+        description="Your public SSH key",
+        render_kw={
+            "aria-describedby": "sshkeyHelp",
+            "placeholder": "Copy and paste your public SSH key"
+        }
+    )
 
 
 def size_format(size):
@@ -206,3 +235,9 @@ def fs_path(path):
             os.path.dirname(t_path), os.path.basename(t_path))
     else:
         abort(404)
+
+
+@app.route("/signup/", methods=["GET", "POST", "OPTIONS"])
+def signup():
+    form = SignUpForm()
+    return render_template("signup.html", form=form)

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block page_title %}{{ page_title|safe }}{% endblock %}
+{% block style %}
+<style type="text/css">
+    .signup {
+        margin-top: 25px;
+    }
+</style>
+{% endblock %}
+{% block header %}
+<nav>
+    <ul class="nav nav-pills pull-right">
+        <li role="presentation"><a href="/">Home</a></li>
+        <li role="presentation" class="active"><a href="/signup/">Sign Up</a></li>
+        <li role="presentation"><a href="#">Info</a></li>
+    </ul>
+</nav>
+<h3 class="text-muted">{{ website_name|safe }}</h3>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h4>Sign Up</h4>
+        <div>
+            <p>
+                In order to use the system, you need to choose a username and upload
+                your public <abbr title="Secure Shell" class="initialism">SSH</abbr> key.
+            </p>
+        </div>
+        <div id="errors"></div>
+        <div class="signup">
+            <form action="/" method="POST" class="form-horizontal">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.username.label(class_="col-sm-2 control-label") }}
+                    <div class="col-sm-8">
+                        {{ form.username(class_="form-control") }}
+                        <span id="usernameHelp" class="help-block">
+                            <small>
+                            Username must start with an alphanumeric character, but
+                            can contain also the characters <kbd>.</kbd>, <kbd>-</kbd> or
+                            <kbd>_</kbd> (i.e.: <i>my_0user.name</i>).
+                            </small>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.ssh_key.label(class_="col-sm-2 control-label") }}
+                    <div class="col-sm-8">
+                        {{ form.ssh_key(class_="form-control") }}
+                        <span id="sshkeyHelp" class="help-block">
+                            <small>
+                            Only one SSH key at the time can be uploaded and it must be on a single line.
+                            </small>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Sign Me Up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+{% endblock %}
