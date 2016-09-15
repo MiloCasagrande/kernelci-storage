@@ -25,6 +25,11 @@ ROOT_DIR = "/mnt/artifacts"
 # Let the web server handle the files.
 USE_X_SENDFILE = False
 
+# Redis connection parameters.
+REDIS_HOST = "localhost"
+RESID_PORT = 6379
+REDIS_PASSWORD = None
+
 # Run in debug mode.
 DEBUG = False
 TESTING = DEBUG

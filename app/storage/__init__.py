@@ -15,6 +15,7 @@ from flask import (
     Flask,
     abort,
     after_this_request,
+    redirect,
     render_template,
     send_from_directory
 )
@@ -24,10 +25,17 @@ from wtforms.fields import (
     StringField,
     TextAreaField
 )
+from wtforms.validators import (
+    InputRequired,
+    Length,
+    ValidationError
+)
 
 import datetime
 import math
 import os
+import re
+import redis
 
 try:
     from os import scandir
@@ -59,16 +67,65 @@ SERVER_HEADER = "{:s}/{:s}".format(
     config_get("SERVER_HEADER"), __versionfull__)
 ROOT = config_get("ROOT_DIR")
 
+VALID_USERNAME = re.compile(r"(^[A-Za-z0-9]{1})([A-Za-z0-9-_.]{2,31})")
+DB_KEY_FORMAT = "gitci|{:s}"
+
+
+class StorageException(Exception):
+    """A simple error class."""
+    pass
+
+
+def get_db_connection():
+    try:
+        r = redis.StrictRedis(
+            host=config_get("REDIS_HOST"),
+            port=config_get("REDIS_PORT"),
+            password=config_get("REDIS_PASSWORD")
+        )
+        # Dumb check to make sure we have a connection or we have to stop.
+        r.info()
+    except redis.exceptions.ConnectionError:
+        raise StorageException()
+
+    return r
+
+
+def username_characters_check(form, field):
+    """Does the username match our regex?"""
+    if not VALID_USERNAME.fullmatch(field.data):
+        raise ValidationError("Provided username is not valid.")
+
+
+def username_duplicates_check(form, field):
+    """Check if we already have the same username registered."""
+    # TODO
+    try:
+        conn = get_db_connection()
+        prev_usr = conn.get(DB_KEY_FORMAT.format(field.data))
+        if prev_usr:
+            raise ValidationError("Provided username is already in use.")
+    except StorageException:
+        abort(500)
+
 
 class SignUpForm(Form):
+    """Simple form to upload SSH keys and choose the username."""
+
+    name_len = "Provided username length is not valid (3 <= length <= 32)."
     username = StringField(
         id="username",
         label="Username",
         description="The username to use with the system",
         render_kw={
             "aria-describedby": "usernameHelp",
-            "placeholder": "Choose a username"
-        }
+            "placeholder": "Choose a username."
+        },
+        validators=[
+            InputRequired(message="A username is required."),
+            Length(min=3, max=32, message=name_len),
+            username_characters_check,
+        ]
     )
     ssh_key = TextAreaField(
         id="sshkey",
@@ -76,8 +133,11 @@ class SignUpForm(Form):
         description="Your public SSH key",
         render_kw={
             "aria-describedby": "sshkeyHelp",
-            "placeholder": "Copy and paste your public SSH key"
-        }
+            "placeholder": "Copy and paste your public SSH key."
+        },
+        validators=[
+            InputRequired(message="An SSH key is required.")
+        ]
     )
 
 
@@ -237,7 +297,14 @@ def fs_path(path):
         abort(404)
 
 
-@app.route("/signup/", methods=["GET", "POST", "OPTIONS"])
+@app.route("/signup/", methods=["GET", "POST"])
 def signup():
     form = SignUpForm()
+    if form.validate_on_submit():
+        print("IT'S VALID")
+        print(form.username.data)
+        print(form.ssh_key.data)
+        return redirect("/")
+    else:
+        print(form.errors)
     return render_template("signup.html", form=form)
