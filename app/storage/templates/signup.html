@@ -5,6 +5,9 @@
     .signup {
         margin-top: 25px;
     }
+    span[role="error"] {
+        font-weight: bold;
+    }
 </style>
 {% endblock %}
 {% block header %}
@@ -24,35 +27,62 @@
         <div>
             <p>
                 In order to use the system, you need to choose a username and upload
-                your public <abbr title="Secure Shell" class="initialism">SSH</abbr> key.
+                your public <abbr title="Secure Shell" class="initialism">SSH</abbr> key (all the fields are required).
             </p>
         </div>
         <div id="errors"></div>
         <div class="signup">
-            <form action="/" method="POST" class="form-horizontal">
+            <form method="POST" class="form-horizontal" action="#">
                 {{ form.csrf_token }}
+{%- if form.username.errors %}
+                <div class="form-group has-error">
+{%- else %}
                 <div class="form-group">
+{%- endif %}
                     {{ form.username.label(class_="col-sm-2 control-label") }}
                     <div class="col-sm-8">
                         {{ form.username(class_="form-control") }}
                         <span id="usernameHelp" class="help-block">
                             <small>
                             Username must start with an alphanumeric character, but
-                            can contain also the characters <kbd>.</kbd>, <kbd>-</kbd> or
-                            <kbd>_</kbd> (i.e.: <i>my_0user.name</i>).
+                            can also contain the characters <kbd>.</kbd>, <kbd>-</kbd> or
+                            <kbd>_</kbd> (i.e.: <i>name.surname</i>). It can contain a
+                            minimum of 3 and a maximum of 32 characters.
                             </small>
                         </span>
+{%- if form.username.errors %}
+                        <span role="error" class="help-block">
+                            <ul>
+                        {%- for e in form.username.errors %}
+                            <li>{{ e }}</li>
+                        {%-endfor %}
+                            </ul>
+                        </span>
+{%- endif %}
                     </div>
                 </div>
+{%- if form.ssh_key.errors %}
+                <div class="form-group has-error">
+{%- else %}
                 <div class="form-group">
+{%- endif %}
                     {{ form.ssh_key.label(class_="col-sm-2 control-label") }}
                     <div class="col-sm-8">
                         {{ form.ssh_key(class_="form-control") }}
                         <span id="sshkeyHelp" class="help-block">
                             <small>
-                            Only one SSH key at the time can be uploaded and it must be on a single line.
+                            Only one SSH key can be uploaded and it must be on a single line.
                             </small>
                         </span>
+{%- if form.ssh_key.errors %}
+                        <span role="error" class="help-block">
+                            <ul>
+                        {%- for e in form.ssh_key.errors %}
+                            <li>{{ e }}</li>
+                        {%-endfor %}
+                            </ul>
+                        </span>
+{%- endif %}
                     </div>
                 </div>
                 <div class="form-group">
