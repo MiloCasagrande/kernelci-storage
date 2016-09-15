@@ -2,3 +2,5 @@ Flask
 Flask-WTF
 uwsgi
 scandir
+redis
+hiredis
