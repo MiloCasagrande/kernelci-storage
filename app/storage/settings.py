@@ -27,8 +27,16 @@ USE_X_SENDFILE = False
 
 # Redis connection parameters.
 REDIS_HOST = "localhost"
-RESID_PORT = 6379
+REDIS_PORT = 6379
 REDIS_PASSWORD = None
+
+# List of usernames that shouldn't be used when registering.
+INVALID_USERNAMES = [
+    "name.surname",
+    "namesurname",
+    "surname.name",
+    "surnamename"
+]
 
 # Run in debug mode.
 DEBUG = False
