@@ -8,6 +8,9 @@
     span[role="error"] {
         font-weight: bold;
     }
+    textarea.form-control {
+        font-size: 95%;
+    }
 </style>
 {% endblock %}
 {% block header %}
@@ -44,9 +47,9 @@
                         {{ form.username(class_="form-control") }}
                         <span id="usernameHelp" class="help-block">
                             <small>
-                            Username must start with an alphanumeric character, but
+                            Username must start with an alphanumeric character (ASCII alphabet), but
                             can also contain the characters <kbd>.</kbd>, <kbd>-</kbd> or
-                            <kbd>_</kbd> (i.e.: <i>name.surname</i>). It can contain a
+                            <kbd>_</kbd> (i.e.: <i>name.surname</i>). It must contain a
                             minimum of 3 and a maximum of 32 characters.
                             </small>
                         </span>
