@@ -26,7 +26,7 @@ ROOT_DIR = "/mnt/artifacts"
 USE_X_SENDFILE = False
 
 # Redis connection parameters.
-REDIS_HOST = "localhost"
+REDIS_HOST = "redis"
 REDIS_PORT = 6379
 REDIS_PASSWORD = None
 
