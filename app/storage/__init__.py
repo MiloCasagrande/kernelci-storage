@@ -336,6 +336,7 @@ def signup():
             r_key = DB_KEY_FORMAT.format(username)
             db = get_db_connection()
             r_map = {
+                "username": username,
                 "ssh_key": ssh_key,
                 "registered_on": datetime.datetime.utcnow()
             }
