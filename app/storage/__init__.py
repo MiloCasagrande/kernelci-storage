@@ -347,7 +347,8 @@ def signup():
 
         page_title = "{} - {}".format(PAGE_TITLE, "Ready to Go!")
         return render_template(
-            "signedup.html", ssh_key=ssh_key, username=username)
+            "signedup.html",
+            ssh_key=ssh_key, username=username, page_title=page_title)
 
     page_title = "{} - {}".format(PAGE_TITLE, "Sign Up")
     return render_template("signup.html", form=form, page_title=page_title)
