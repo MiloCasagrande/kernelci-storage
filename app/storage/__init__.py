@@ -15,7 +15,6 @@ from flask import (
     Flask,
     abort,
     after_this_request,
-    redirect,
     render_template,
     send_from_directory
 )
@@ -28,6 +27,7 @@ from wtforms.fields import (
 from wtforms.validators import (
     InputRequired,
     Length,
+    NoneOf,
     ValidationError
 )
 
@@ -36,6 +36,8 @@ import math
 import os
 import re
 import redis
+import subprocess
+import tempfile
 
 try:
     from os import scandir
@@ -69,14 +71,16 @@ ROOT = config_get("ROOT_DIR")
 
 VALID_USERNAME = re.compile(r"(^[A-Za-z0-9]{1})([A-Za-z0-9-_.]{2,31})")
 DB_KEY_FORMAT = "gitci|{:s}"
+REDIS_PUB_CH = "gitciuser"
 
 
 class StorageException(Exception):
-    """A simple error class."""
+    """A basic error class."""
     pass
 
 
 def get_db_connection():
+    """Get the redis connection."""
     try:
         r = redis.StrictRedis(
             host=config_get("REDIS_HOST"),
@@ -99,14 +103,31 @@ def username_characters_check(form, field):
 
 def username_duplicates_check(form, field):
     """Check if we already have the same username registered."""
-    # TODO
     try:
-        conn = get_db_connection()
-        prev_usr = conn.get(DB_KEY_FORMAT.format(field.data))
-        if prev_usr:
+        db = get_db_connection()
+        if db.exists(DB_KEY_FORMAT.format(field.data)):
             raise ValidationError("Provided username is already in use.")
     except StorageException:
         abort(500)
+
+
+def sshkey_valid_check(form, field):
+    """Check the validity of an ssh key uploaded.
+
+    Make sure the ssh-keygen can make something out of the key.
+    ssh-keygen returns 0 if everything is ok, 255 otherwise.
+    """
+    with tempfile.NamedTemporaryFile() as pub_ssh, open(os.devnull) as null:
+        pub_ssh.write(bytes(field.data.strip() + "\n", "utf-8"))
+        pub_ssh.flush()
+
+        try:
+            subprocess.check_call(
+                ["ssh-keygen", "-l", "-f", pub_ssh.name],
+                stdout=null, stderr=null)
+        except subprocess.CalledProcessError as ex:
+            print(ex.returncode)
+            raise ValidationError("Provided SSH key is not valid.")
 
 
 class SignUpForm(Form):
@@ -124,7 +145,11 @@ class SignUpForm(Form):
         validators=[
             InputRequired(message="A username is required."),
             Length(min=3, max=32, message=name_len),
+            NoneOf(
+                config_get("INVALID_USERNAMES"),
+                message="Provided username is not valid."),
             username_characters_check,
+            username_duplicates_check
         ]
     )
     ssh_key = TextAreaField(
@@ -132,11 +157,14 @@ class SignUpForm(Form):
         label="SSH Key",
         description="Your public SSH key",
         render_kw={
+            "autocomplete": "off",
+            "rows": 10,
             "aria-describedby": "sshkeyHelp",
             "placeholder": "Copy and paste your public SSH key."
         },
         validators=[
-            InputRequired(message="An SSH key is required.")
+            InputRequired(message="An SSH key is required."),
+            sshkey_valid_check
         ]
     )
 
@@ -299,12 +327,26 @@ def fs_path(path):
 
 @app.route("/signup/", methods=["GET", "POST"])
 def signup():
+    """The signup page and its form."""
     form = SignUpForm()
     if form.validate_on_submit():
-        print("IT'S VALID")
-        print(form.username.data)
-        print(form.ssh_key.data)
-        return redirect("/")
-    else:
-        print(form.errors)
-    return render_template("signup.html", form=form)
+        username = form.username.data
+        ssh_key = form.ssh_key.data
+        try:
+            r_key = DB_KEY_FORMAT.format(username)
+            db = get_db_connection()
+            r_map = {
+                "ssh_key": ssh_key,
+                "registered_on": datetime.datetime.utcnow()
+            }
+            db.hmset(r_key, r_map)
+            db.publish(REDIS_PUB_CH, r_key)
+        except StorageException:
+            abort(500)
+
+        page_title = "{} - {}".format(PAGE_TITLE, "Ready to Go!")
+        return render_template(
+            "signedup.html", ssh_key=ssh_key, username=username)
+
+    page_title = "{} - {}".format(PAGE_TITLE, "Sign Up")
+    return render_template("signup.html", form=form, page_title=page_title)

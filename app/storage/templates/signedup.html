@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block page_title %}{{ page_title|safe }}{% endblock %}
+{% block style %}
+<style type="text/css">
+    .signup {
+        margin-top: 25px;
+    }
+    textarea.sshkey {
+        font-size: 90%;
+        margin-top: 0.5em;
+    }
+    textarea.sshkey,
+    span.username,
+    .giturl {
+        font-family: monospace;
+    }
+    .details {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .details-box {
+        border: solid 1px #e5e5e5;
+        border-radius: 0.3em;
+        display: block;
+    }
+    .middle-box {
+        border-bottom: solid 1px #e5e5e5;
+    }
+    .box-content,
+    .box-title {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    .box-content {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .box-title {
+        font-weight: bold;
+        font-size: 150%;
+    }
+    .box {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    .box-description {
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+{% block header %}
+<nav>
+    <ul class="nav nav-pills pull-right">
+        <li role="presentation"><a href="/">Home</a></li>
+        <li role="presentation" class="active"><a href="/signup/">Sign Up</a></li>
+        <li role="presentation"><a href="#">Info</a></li>
+    </ul>
+</nav>
+<h3 class="text-muted">{{ website_name|safe }}</h3>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h4>You Are Ready to Go!</h4>
+        <div class="signup">
+            <p>
+                Thank you for setting up you username and SSH key with <strong>git://ci</strong>.
+                <br/>
+                Below you'll find the information you provided and how to setup your
+                git repository.
+            </p>
+        </div>
+    </div>
+    <div class="details-container col-lg-12">
+        <div class="details">
+            <dl class="dl-horizontal">
+                <dt>Username</dt>
+                <dd><span class="username">{{ username }}</span></dd>
+                <dt>SSH Key</dt>
+                <dd>
+                    <textarea class="sshkey form-control" rows="10" readonly=true>{{ ssh_key|trim }}</textarea>
+                </dd>
+            </dl>
+        </div>
+        <h4>Git Access</h4>
+        <div class="details">
+            <div class="details-box">
+                <div class="middle-box box">
+                    <div class="box-title">The quick setup</div>
+                    <div class="box-content">
+                        <div class="box-description">
+                            Copy and paste the following URL to add it as your remote (don't forget to add the name of repository!&nbsp;&#128522;&nbsp;).
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control giturl" readonly=true value="ssh://git@gitci.com/{{ username }}/" id="git-url">
+                            <span class="input-group-btn" id="basic-addon2">
+                                <button 
+                                    class="btn btn-default"
+                                    type="button"
+                                    aria-title="Copy to clipboard."
+                                    title="Copy to clipboard."
+                                    id="copy-button"
+                                    data-toggle="tooltip">
+                                    <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="middle-box box">
+                    <div class="box-title">For an existing repository</div>
+                    <div class="box-content">
+                        <div class="cli">
+<pre>
+cd my-repo/
+git remote add gitci ssh://git@gitci.com/{{ username }}/my-repo.git
+git push -u gitci master
+</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-box box">
+                    <div class="box-title">For a new repository</div>
+                    <div class="box-content">
+                        <div class="cli">
+<pre>
+git init new-repo
+[ Make code changes ]
+git commit -m "First commit"
+git remote add gitci ssh://git@gitci.com/{{ username }}/new-repo.git
+git push -u gitci master</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+    'use strict';
+    var copyButton;
+    var input;
+    var oldTitle;
+
+    // Enable the tooltip on the page.
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body'
+        })
+    })
+
+    copyButton = document.getElementById('copy-button');
+    input = document.getElementById('git-url');
+    oldTitle = copyButton.title;
+    // Does the browser support the 'copy to clipboard' command from JS?
+    copyButton.disabled = !document.queryCommandSupported('copy');
+
+    if (!copyButton.disabled) {
+        copyButton.addEventListener('mouseleave', function(event) {
+            copyButton.blur();
+            setTimeout(function() {
+                $(copyButton)
+                    .tooltip('hide')
+                    .attr('data-original-title', oldTitle)
+                    .tooltip('fixTitle');
+            }, 100);
+        });
+
+        copyButton.addEventListener('click', function(event) {
+            input.select();
+
+            try {
+                document.execCommand('copy');
+                $(copyButton)
+                    .attr('data-original-title', 'Copied!')
+                    .tooltip('fixTitle')
+                    .tooltip('show');
+                input.blur();
+            } catch(err) {
+                console.log(
+                    'Unable to copy URL to clipboard: missing browser support?');
+            }
+        });
+    }
+</script>
+{% endblock %}
