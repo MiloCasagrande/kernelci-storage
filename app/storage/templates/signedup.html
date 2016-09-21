@@ -19,12 +19,12 @@
         margin-bottom: 10px;
     }
     .details-box {
-        border: solid 1px #e5e5e5;
+        border: solid 1px #858794;
         border-radius: 0.3em;
         display: block;
     }
     .middle-box {
-        border-bottom: solid 1px #e5e5e5;
+        border-bottom: solid 1px #858794;
     }
     .box-content,
     .box-title {
@@ -37,7 +37,8 @@
     }
     .box-title {
         font-weight: bold;
-        font-size: 150%;
+        font-size: 120%;
+        color: #003B73;
     }
     .box {
         padding-top: 15px;
@@ -46,17 +47,10 @@
     .box-description {
         margin-bottom: 15px;
     }
+    .form-control[readonly] {
+        background-color: rgba(133, 135, 148, 0.4);
+    }
 </style>
-{% endblock %}
-{% block header %}
-<nav>
-    <ul class="nav nav-pills pull-right">
-        <li role="presentation"><a href="/">Home</a></li>
-        <li role="presentation" class="active"><a href="/signup/">Sign Up</a></li>
-        <li role="presentation"><a href="#">Info</a></li>
-    </ul>
-</nav>
-<h3 class="text-muted">{{ website_name|safe }}</h3>
 {% endblock %}
 {% block content %}
 <div class="row">
@@ -143,7 +137,11 @@ git push gitci master</pre>
     'use strict';
     var copyButton;
     var input;
+    var nav;
     var oldTitle;
+
+    nav = document.getElementById('signup');
+    nav.className = 'active';
 
     // Enable the tooltip on the page.
     $(function () {

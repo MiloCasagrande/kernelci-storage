@@ -8,20 +8,32 @@
     span[role="error"] {
         font-weight: bold;
     }
+    .form-control {
+        border: 1px solid #858794;
+        color: inherit !important;
+    }
+    textarea.form-control:focus,
+    input[type="text"]:focus {
+        border-color: rgba(0, 59, 115, 0.8);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 59, 115, 0.6);
+        outline: 0 none;
+    }
+    .has-error textarea.form-control:focus,
+    .has-error input[type="text"]:focus {
+        border-color: rgba(213, 41, 32, 0.8);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(213, 41, 32, 0.6);
+    }
+    .has-error .form-control {
+        border-color: #D52920;
+    }
+    .has-error .help-block,
+    .has-error .control-label {
+        color: #D52920;
+    }
     textarea.form-control {
         font-size: 95%;
     }
 </style>
-{% endblock %}
-{% block header %}
-<nav>
-    <ul class="nav nav-pills pull-right">
-        <li role="presentation"><a href="/">Home</a></li>
-        <li role="presentation" class="active"><a href="/signup/">Sign Up</a></li>
-        <li role="presentation"><a href="#">Info</a></li>
-    </ul>
-</nav>
-<h3 class="text-muted">{{ website_name|safe }}</h3>
 {% endblock %}
 {% block content %}
 <div class="row">
@@ -96,4 +108,13 @@
             </form>
         </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    'use strict';
+    var nav;
+
+    nav = document.getElementById('signup');
+    nav.className = 'active';
+</script>
 {% endblock %}

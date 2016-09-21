@@ -5,25 +5,35 @@
     .index {
         padding-top: 20px;
     }
+    @media screen and (min-width: 768px) {
+        .container .jumbotron,
+        .container-fluid .jumbotron {
+            padding-right: 48px;
+            padding-left: 48px;
+        }
+        .jumbotron {
+            padding-bottom: 64px;
+        }
+    }
+    div.jumbotron {
+        /* background-color: #858794; */
+        background-color: rgba(133, 135, 148, 0.7);
+        background-image: url("/static/img/gitci-circuit.svg");
+        background-size: contain, cover;
+        background-origin: border-box;
+        background-position: bottom;
+        background-repeat: no-repeat;
+    }
 </style>
-{% endblock %}
-{% block header %}
-<nav>
-    <ul class="nav nav-pills pull-right">
-        <li role="presentation" class="active"><a href="/">Home</a></li>
-        <li role="presentation"><a href="/signup/">Sign Up</a></li>
-        <li role="presentation"><a href="#">Info</a></li>
-    </ul>
-</nav>
-<h3 class="text-muted">{{ website_name|safe }}</h3>
 {% endblock %}
 {% block content %}
 <div class="jumbotron">
     <div>
+        <img src="/static/img/gitci-logo64.png" style="float:right;">
         <p>Using git://ci is simple:</p>
         <ol>
             <li>Obtain access</li>
-            <li>Clone zephyr source code</li>
+            <li>Clone Linaro IoT source code</li>
             <li>Add <code>gitci</code> remote</li>
             <li>Review test results</li>
         </ol>
@@ -87,4 +97,13 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    'use strict';
+    var nav;
+
+    nav = document.getElementById('home');
+    nav.className = 'active';
+</script>
 {% endblock %}
