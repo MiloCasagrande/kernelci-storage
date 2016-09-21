@@ -277,7 +277,7 @@ def index():
         page_title=page_title, body_title=WEBSITE_NAME, website=WEBSITE_NAME)
 
 
-@app.route("/<path:path>/", methods=["GET"])
+@app.route("/<path:path>", methods=["GET"])
 def fs_path(path):
     """The only needed route/view."""
 
