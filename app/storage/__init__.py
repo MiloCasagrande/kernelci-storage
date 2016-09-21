@@ -16,7 +16,8 @@ from flask import (
     abort,
     after_this_request,
     render_template,
-    send_from_directory
+    send_from_directory,
+    make_response
 )
 
 from flask_wtf import Form
@@ -277,7 +278,7 @@ def index():
         page_title=page_title, body_title=WEBSITE_NAME, website=WEBSITE_NAME)
 
 
-@app.route("/<path:path>/", methods=["GET"])
+@app.route("/<path:path>", methods=["GET"])
 def fs_path(path):
     """The only needed route/view."""
 
@@ -292,12 +293,13 @@ def fs_path(path):
     o_path = path
     t_path = os.path.join(ROOT, path)
 
-    if path[0] != "/":
-        path = "/{}".format(path)
-    if o_path[-1] != "/":
-        o_path = "{}/".format(o_path)
-
     if os.path.isdir(t_path):
+        if path[0] != "/":
+            path = "/{}".format(path)
+
+        if o_path[-1] != "/":
+            o_path = "{}/".format(o_path)
+
         parent = os.path.dirname(path)
         if parent == "/":
             parent = None
@@ -313,8 +315,15 @@ def fs_path(path):
             body_title=body_title)
 
     elif os.path.isfile(t_path):
-        return send_from_directory(
-            os.path.dirname(t_path), os.path.basename(t_path))
+        resp = make_response(send_from_directory(
+            os.path.dirname(t_path), os.path.basename(t_path)))
+
+        # Force the webserver to handle the Content-Type header.
+        resp.headers["Content-Type"] = ""
+        # Nginx way of using x_sendfile.
+        resp.headers["X-Accel-Redirect"] = os.path.join("/artifacts", path)
+
+        return resp
     else:
         abort(404)
 
