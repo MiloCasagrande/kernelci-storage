@@ -258,12 +258,6 @@ def internal_server_error(error):
     ), 500
 
 
-@app.route("/favicon.ico", methods=["GET"])
-def favicon():
-    """Just a placeholder to catch the favicon.ico requests."""
-    abort(404)
-
-
 @app.route("/", methods=["GET"])
 def index():
     """The empty index page."""
