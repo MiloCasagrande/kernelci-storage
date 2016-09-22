@@ -73,6 +73,7 @@ ROOT = config_get("ROOT_DIR")
 VALID_USERNAME = re.compile(r"(^[A-Za-z0-9]{1})([A-Za-z0-9-_.]{2,31})")
 DB_KEY_FORMAT = "gitci|{:s}"
 REDIS_PUB_CH = "gitciuser"
+GA_ANALYTICS = config_get("GA_ANALYTICS", None)
 
 
 class StorageException(Exception):
@@ -233,6 +234,7 @@ def scan_dir(directory, root):
 def inject_variables():
     """Inject often-used variables."""
     return dict(
+        analytics=GA_ANALYTICS,
         website_name=WEBSITE_NAME,
         description=config_get("DESCRIPTION"),
         version=__versionfull__

@@ -38,6 +38,9 @@ INVALID_USERNAMES = [
     "surnamename"
 ]
 
+# Google analytics value.
+GA_ANALYTICS = None
+
 # Run in debug mode.
 DEBUG = False
 TESTING = DEBUG
