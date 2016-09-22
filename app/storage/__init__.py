@@ -276,7 +276,7 @@ def index():
     page_title = "{:s} - {:s}".format(PAGE_TITLE, "Home Page")
 
     return render_template(
-        "index.html",
+        "index2.html",
         page_title=page_title, body_title=WEBSITE_NAME, website=WEBSITE_NAME)
 
 
