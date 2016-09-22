@@ -320,8 +320,8 @@ def fs_path(path):
 
         # Force the webserver to handle the Content-Type header.
         resp.headers["Content-Type"] = ""
-        resp.headers["Content-Disposition"] = \
-            "attachment; filename=\"{}\"".format(os.path.basename(t_path))
+        # resp.headers["Content-Disposition"] = \
+        #     "attachment; filename=\"{}\"".format(os.path.basename(t_path))
         resp.headers["X-Accel-Redirect"] = os.path.join("/artifacts", path)
 
         print(resp.headers)
