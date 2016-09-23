@@ -73,6 +73,7 @@ ROOT = config_get("ROOT_DIR")
 
 VALID_USERNAME = re.compile(r"(^[A-Za-z0-9]{1})([A-Za-z0-9-_.]{2,31})")
 DB_KEY_FORMAT = "gitci|{:s}"
+EMAIL_KEY_FORMAT = "gitciemail|{:s}"
 REDIS_PUB_CH = "gitciuser"
 GA_ANALYTICS = config_get("GA_ANALYTICS", None)
 
@@ -295,8 +296,12 @@ def index():
     email_submit = False
 
     if email_form.validate_on_submit():
-        # TODO
         email_submit = True
+        email = email_form.email.data
+
+        if email:
+            db = get_db_connection()
+            db.setnx(EMAIL_KEY_FORMAT.format(email), email)
 
     return render_template(
         "index.html",
