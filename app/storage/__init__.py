@@ -26,6 +26,7 @@ from wtforms.fields import (
     TextAreaField
 )
 from wtforms.validators import (
+    Email,
     InputRequired,
     Length,
     NoneOf,
@@ -171,6 +172,21 @@ class SignUpForm(Form):
     )
 
 
+class EmailForm(Form):
+    email = StringField(
+        id="email",
+        description="Your email address",
+        render_kw={
+            "placeholder": "me@example.net",
+            "type": "email"
+        },
+        validators=[
+            InputRequired(message="You have to provide a username."),
+            Email(message="Provided email is not valid.")
+        ]
+    )
+
+
 def size_format(size):
     """Format a bytes size in a human readable way.
 
@@ -261,7 +277,7 @@ def internal_server_error(error):
     ), 500
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     """The empty index page."""
 
@@ -275,8 +291,17 @@ def index():
 
     page_title = "{:s} - {:s}".format(PAGE_TITLE, "Home Page")
 
+    email_form = EmailForm()
+    email_submit = False
+
+    if email_form.validate_on_submit():
+        # TODO
+        email_submit = True
+
     return render_template(
-        "index2.html",
+        "index.html",
+        email_form=email_form,
+        email_submit=email_submit,
         page_title=page_title, body_title=WEBSITE_NAME, website=WEBSITE_NAME)
 
 

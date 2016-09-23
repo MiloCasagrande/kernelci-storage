@@ -1,108 +1,127 @@
 {% extends "base.html" %}
-{% block page_title %}{{ page_title|safe }}{% endblock %}
-{% block style %}
-<style type="text/css">
-    .index {
-        padding-top: 20px;
-    }
-    @media screen and (min-width: 768px) {
-        .container .jumbotron,
-        .container-fluid .jumbotron {
-            padding-right: 48px;
-            padding-left: 48px;
-        }
-        .jumbotron {
-            padding-bottom: 64px;
-        }
-    }
-    div.jumbotron {
-        background-color: rgba(133, 135, 148, 0.7);
-        background-image: url("/static/img/gitci-circuit.svg");
-        background-size: contain, cover;
-        background-origin: border-box;
-        background-position: bottom;
-        background-repeat: no-repeat;
-    }
-</style>
-{% endblock %}
 {% block content %}
-<div class="jumbotron">
-    <div>
-        <img src="/static/img/gitci-logo64.png" style="float:right;">
-        <p>Using git://ci is simple:</p>
-        <ol>
-            <li>Obtain access</li>
-            <li>Clone Linaro IoT source code</li>
-            <li>Add <code>gitci</code> remote</li>
-            <li>Review test results</li>
-        </ol>
-    </div>
-</div>
-<div class="row index">
-    <div class="col-lg-12">
-        <h4>Obtain access</h4>
-        <div>
-            <ol>
-                <li>Obtain access and upload your SSH key: <a href="/signup/">Sign Up</a>.</li>
-                <li>Get your username and repository URL.</li>
-            </ol>
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">git://ci</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#signup">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <h4>Obtain source code</h4>
-        <div>
-            <ul class="list-unstyled">
-                <li>
-                    <pre>git clone https://gerrit.zephyrproject.org/r/zephyr zephyr-project</pre>
-                </li>
-                <li>
-                    <pre>cd zephyr-project</pre>
-                </li>
-                <li>
-                    Modify your source code, making sure it builds locally.
-                </li>
-                <li>
-                    <pre>git add .</pre>
-                </li>
-                <li>
-                    <pre>git commit -m "Commit message"</pre>
-                </li>
-            </ul>
-        </div>
-        <h4>Add git://ci remote</h4>
-        <div>
-            <ul class="list-unstyled">
-                <li>
-                    <pre>git remote add gitci ssh://git@gitci.com/username/zephyr-project</pre>
-                </li>
-            </ul>
-        </div>
-        <h4>Enable git://ci</h4>
-        <div>
-            <ul class="list-unstyled">
-                <li>
-                    <pre>git push gitci master</pre>
-                </li>
-                <li>
-                    Lives results will appear on your screen.
-                </li>
-            </ul>
-        </div>
-        <h4>Access your results</h4>
-        <div>
-            <ul class="list-unstyled">
-                <li>
-                    The system will store your results and provide you with a link to see them.
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-{% endblock %}
-{% block scripts %}
-<script type="text/javascript">
-    'use strict';
-    var nav;
+    </nav>
 
-    nav = document.getElementById('home');
-    nav.className = 'active';
-</script>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1 id="homeHeading">
+                    <img alt="gitci logo" src="/static/img/gitci-logo64.png"><br/>
+                    git://ci<br/>
+                    Test Automation @ Scale<br/>
+                </h1>
+                <hr>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+                <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-primary" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Hassles Free Automated Tests</h2>
+                    <hr class="light">
+                    <p class="text-faded text-justify">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <a href="#contact" class="page-scroll btn btn-default btn-xl sr-button"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Let's Keep In Touch</h2>
+                    <hr class="primary">
+                    <p>Want to know when we are ready to launch our system for
+                    public availability?
+                    <br/>
+                    Leave your email in the box below, we will not send you any spam.
+                    </p>
+                </div>
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <div>
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <form method="POST" class="form-horizontal" action="#contact">
+                                {{ email_form.csrf_token }}
+{%- if email_form.email.errors %}
+                                <div class="form-group has-error">
+{%- else %}
+                                <div class="form-group">
+{%- endif %}
+                                    {{ email_form.email(class_="form-control") }}
+                                    <div>
+                                        {{ email_form.email.errors[0] }}
+                                    </div>
+                                </div>
+{%- if email_submit %}
+                                <span class="btn btn-primary bt-sm">Thanks!</span>
+{%- else %}
+                                <button type="submit" class="btn btn-primary bt-sm" name="email">Send</button>
+{%- endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="signup">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Sign Up to Obtain Access</h2>
+                    <hr class="primary">
+                    <p>
+                        Choose a username, copy your public SSH key, and you're all set.
+                        <br/>
+                        Want to give it a try?
+                    </p>
+                    <a href="/signup/" class="btn btn-primary btn-xl page-scroll">Yes!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
