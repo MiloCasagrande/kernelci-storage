@@ -1,4 +1,17 @@
 {% extends "base.html" %}
+{% block style %}
+<style type="text/css">
+    h1 small {
+        color: inherit;
+    }
+    p > a {
+        color: #6D6665;
+    }
+    p > a:hover {
+        color: inherit;
+    }
+</style>
+{% endblock %}
 {% block content %}
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
@@ -30,17 +43,27 @@
             <div class="header-content-inner">
                 <h1 id="homeHeading">
                     <img alt="gitci logo" src="/static/img/gitci-logo64.png"><br/>
-                    git://ci<br/>
-                    TEST AUTOMATION @ SCALE<br/>
+                    git://ci&nbsp;<sup><small>&#946;eta</small></sup><br/>
                 </h1>
+                <h2>
+                    A system where development, testing and deployment work together
+                </h2>
                 <hr>
-                <p class="text-justify">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                <p>
+                    What is <strong>git://ci</strong>?<br/><br/>
+                    Truth is, we don't know yet.
+                    <br/>
+                    But we know what we want.
+                    <br/>
+                    <br/>
+                    Consider it a prototype, a
+                    proof-of-concept. One thing we know is we like the workflow for
+                    development and we hope you do too.
+                    <br/>
+                    All this is done on bare metal, full-stack software deployments;
+                    bootloaders, firmware, kernels and applications.<br/>
+                    <br/>
+                    From microcontrollers to enterprise servers.
                 </p>
                 <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
             </div>
@@ -51,15 +74,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Hassles Free Automated Tests</h2>
+                    <h2 class="section-heading">Hassle-free Automation</h2>
                     <hr class="light">
                     <p class="text-faded text-justify">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Leveraging the popularity and the workflow of git, we built a system that would seamlessly fit the developer workflow.
+<br/>
+<br/>
+In its initial form, <strong>git://ci</strong> is built around the work Linaro is doing with the <a href="https://www.zephyrproject.org/">zephyr project</a>.
+<br/><br/>
+With <strong>git://ci</strong>, you just &#8220;git clone&#8221; the source code, make your changes, and &#8220;git push&#8221; to a <strong>git://ci</strong> remote. Your code will be rebuilt - along with over 50 of the zephyr test binaries - and it will be tested using <strong>git://ci</strong>'s machine farm currently running qemu <em>cortex-m3</em> virtual machines.
+<br/>
+<br/>
+In the end, you'll see the results of over 75 different tests, all executing concurrently in real-time, and you’ll get to see the results without leaving your console.
                     </p>
                     <a href="#contact" class="page-scroll btn btn-default btn-xl sr-button"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
                 </div>
@@ -73,10 +99,10 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <h2 class="section-heading">Let's Keep In Touch</h2>
                     <hr class="primary">
-                    <p>Want to know when we are ready to launch our system for
-                    public availability?
-                    <br/>
-                    Leave your email in the box below, we will not send you any spam.
+                    <p>Though we don't know what <strong>git://ci</strong> is and we don't know where it's going, if you are interested, we'd love to bring you along!
+                    </p>
+                    <p>
+                    Add your email address to be notified when we depart on our next journey.
                     </p>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
@@ -114,11 +140,27 @@
                     <h2 class="section-heading">Sign Up to Obtain Access</h2>
                     <hr class="primary">
                     <p>
-                        Choose a username, copy your public SSH key, and you're all set.
+                        For those of you that want to give <strong>git://ci</strong> a try, we'd love to have you participate.
                         <br/>
+                        Choose a username, copy your public SSH key, and you're all set.
+                        <br>
                         Want to give it a try?
                     </p>
                     <a href="/signup/" class="btn btn-primary">Yes!</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Give Feedback</h2>
+                    <p>
+                        If you have 5 minutes, we'd love to hear your feedback on your experience.
+                        <br>
+                    </p>
+                    <a href="https://docs.google.com/a/linaro.org/forms/d/e/1FAIpQLScS-KO0UCYiWbJMp2eza3Lxd6HW7SzUCiK_auzSa-OF1vm-Fw/viewform?c=0&w=1" class="btn btn-primary">Give Feedback</i></a>
                 </div>
             </div>
         </div>
