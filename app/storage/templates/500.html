@@ -1,15 +1,36 @@
 {% extends "base.html" %}
-{% block page_title %}{{ page_title|safe }}{% endblock %}
+{% block style %}
+<style type="text/css">
+    .navbar-default .navbar-header .navbar-brand:hover,
+    .navbar-default .navbar-header .navbar-brand:focus {
+        color: inherit;
+    }
+    h4 {
+        color: #E1523D;
+    }
+</style>
+{% endblock %}
 {% block content %}
-<div class="row">
-    <div class="col-lg-12">
-        <div class="page-header"><h4>{{ body_title|safe }}</h4></div>
-        <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
-        <p>
-            &hellip;and then of courve I've got this terrible
-            <br/>
-            pain in all the diodes down my left hand side&hellip;
-        </p>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand page-scroll" href="/">git://ci</a>
+        </div>
     </div>
-</div>
+</nav>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header"><h4>{{ body_title|safe }}</h4></div>
+                <i class="fa fa-quote-left fa-3x pull-left fa-border"></i>
+                <p>
+                    &hellip;and then of courve I've got this terrible
+                    <br/>
+                    pain in all the diodes down my left hand side&hellip;
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
