@@ -24,6 +24,30 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link rel="icon" href="/static/img/gitci-logo16.png" type="image/png" sizes="16x16">
+    <style type="text/css">
+        .form-control {
+            border: 1px solid #6D6665;
+            color: inherit !important;
+        }
+        textarea.form-control:focus,
+        input[type="text"]:focus {
+            border-color: rgba(109, 102, 101, 0.8);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(109, 102, 101, 0.6);
+            outline: 0 none;
+        }
+        .has-error textarea.form-control:focus,
+        .has-error input[type="text"]:focus {
+            border-color: rgba(213, 41, 32, 0.8);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(213, 41, 32, 0.6);
+        }
+        .has-error .form-control {
+            border-color: #D52920;
+        }
+        .has-error .help-block,
+        .has-error .control-label {
+            color: #D52920;
+        }
+    </style>
 {%- block style %}{%- endblock %}
 </head>
 <body id="page-top">

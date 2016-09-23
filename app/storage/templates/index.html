@@ -90,7 +90,7 @@
                                 <div class="form-group">
 {%- endif %}
                                     {{ email_form.email(class_="form-control") }}
-                                    <div>
+                                    <div role="error" class="help-block">
                                         {{ email_form.email.errors[0] }}
                                     </div>
                                 </div>

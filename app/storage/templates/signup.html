@@ -1,34 +1,12 @@
 {% extends "base.html" %}
 {% block style %}
 <style type="text/css">
-    .form-control {
-        border: 1px solid #6D6665;
-        color: inherit !important;
-    }
-    textarea.form-control:focus,
-    input[type="text"]:focus {
-        border-color: rgba(109, 102, 101, 0.8);
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(109, 102, 101, 0.6);
-        outline: 0 none;
-    }
     textarea.form-control {
         font-size: 95%;
     }
     .navbar-default .navbar-header .navbar-brand:hover,
     .navbar-default .navbar-header .navbar-brand:focus {
         color: inherit;
-    }
-    .has-error textarea.form-control:focus,
-    .has-error input[type="text"]:focus {
-        border-color: rgba(213, 41, 32, 0.8);
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(213, 41, 32, 0.6);
-    }
-    .has-error .form-control {
-        border-color: #D52920;
-    }
-    .has-error .help-block,
-    .has-error .control-label {
-        color: #D52920;
     }
 </style>
 {% endblock %}
@@ -75,13 +53,13 @@
                             </small>
                         </span>
 {%- if form.username.errors %}
-                        <span role="error" class="help-block">
+                        <div role="error" class="help-block">
                             <ul>
                         {%- for e in form.username.errors %}
                             <li>{{ e }}</li>
                         {%-endfor %}
                             </ul>
-                        </span>
+                        </div>
 {%- endif %}
                     </div>
                 </div>
