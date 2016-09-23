@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block style %}
 <style type="text/css">
-    textarea.form-control {
-        font-size: 95%;
-    }
     .navbar-default .navbar-header .navbar-brand:hover,
     .navbar-default .navbar-header .navbar-brand:focus {
         color: inherit;
@@ -11,19 +8,17 @@
 </style>
 {% endblock %}
 {% block content %}
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
-                </button>
-                <a class="navbar-brand page-scroll" href="/">git://ci</a>
-            </div>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand page-scroll" href="/">git://ci</a>
         </div>
-    </nav>
+    </div>
+</nav>
 <section>
+<div class="container">
 <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
         <div>
             <p class="text-center">
                 Choose a username and upload
@@ -94,6 +89,7 @@
                 </div>
             </form>
         </div>
+</div>
 </div>
 </section>
 {% endblock %}
